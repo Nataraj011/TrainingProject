@@ -7,7 +7,6 @@ import AuthService from "./services/auth.service";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Home from "./components/Home";
 import Profile from "./components/Profile";
 
 import BoardAdmin from "./components/BoardAdmin";
@@ -34,6 +33,8 @@ import ViewQuotation from "./components/ViewQuotation";
 import ProductByNameadmin from "./components/ProductByNameadmin";
 import ProductByNamemgr from "./components/ProductByNamemgr";
 import UpdateRole from "./components/UpdateRole";
+import Homepage from "./components/Homepage";
+import AddProductAndFeatures from "./components/AddProductandFeatures";
 
 const App = () => {
   const [showManagerBoard, setShowManagerBoard] = useState(false);
@@ -64,6 +65,7 @@ const App = () => {
 
   const logOut = () => {
     AuthService.logout();
+    setShowUserBoard(false);
     setShowManagerBoard(false);
     setShowAdminBoard(false);
     setCurrentUser(undefined);
@@ -73,7 +75,7 @@ const App = () => {
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-gradient-primary">
         <Link to={"/"} className="navbar-brand">
-          CMS Project
+          Products
         </Link>
         <button
           className="navbar-toggler"
@@ -136,14 +138,14 @@ const App = () => {
 
       <div className="container mt-3">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<ViewAllProducts/>} />
+          <Route path="/home" element={<Homepage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<BoardAdmin />} />
-          <Route path="/add-product" element={<AddProduct />} />
-          <Route path="/add-features" element={<AddFeatures />} />
+          {/* <Route path="/add-product" element={<AddProduct />} />
+          <Route path="/add-features" element={<AddFeatures />} /> */}
           <Route path="/delete-param" element={<DeleteParameter />} />
           <Route path="/delete-feature" element={<DeleteFeature />} />
           <Route path="/delete-product" element={<DeleteProduct />} />
@@ -161,6 +163,7 @@ const App = () => {
           <Route path="/create-quotation" element={<AddQuotation />} />
           <Route path="/get-quotation" element={<ViewQuotation />} />
           <Route path="/updaterole" element={<UpdateRole />} />
+          <Route path="/add-products" element={<AddProductAndFeatures />} />
         </Routes>
       </div>
     </div>

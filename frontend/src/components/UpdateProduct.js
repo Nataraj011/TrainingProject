@@ -1,60 +1,71 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import UserService from "../services/user.service";
 
-const UpdateProduct = ({ product, productId, onProductUpdate }) => {
-  const [updatedProduct, setUpdatedProduct] = useState({
-    id: product.id,
-    name: product.name,
-    features: product.features.map(feature => ({
-      id: feature.id,
-      name: feature.name,
-      product: feature.product ? { id: feature.product.id, name: feature.product.name } : { id: '', name: '' },
-      parameters: feature.parameters.map(param => ({
-        id: param.id,
-        name: param.name,
-        type: param.type,
-        value: param.value
-      }))
-    }))
-  });
+const UpdateProduct = ({ product, onProductUpdate, products }) => {
+  const [updatedProduct, setUpdatedProduct] = useState(null); // Initialize as null initially
+  const [error, setError] = useState(null);
 
+  // Initialize the updatedProduct state when product prop changes
+  useEffect(() => {
+    if (product) {
+      setUpdatedProduct({
+        id: product.id,
+        name: product.name,
+        features: product.features.map((feature) => ({
+          id: feature.id,
+          name: feature.name,
+          product: {
+            id: feature.product ? feature.product.id : "",
+            name: feature.product ? feature.product.name : product.name, // Set default to current product name
+          },
+          parameters: feature.parameters.map((param) => ({
+            id: param.id,
+            name: param.name,
+            type: param.type,
+            value: param.value,
+          })),
+        })),
+      });
+    }
+  }, [product]);
+
+  // Handler to update product name, ID, and sync between them
+  const handleProductNameChange = (featureIndex, newName) => {
+    setUpdatedProduct((prevProduct) => ({
+      ...prevProduct,
+      features: prevProduct.features.map((feature, index) => {
+        if (index !== featureIndex) return feature;
+
+        // Find the product object from products array
+        const selectedProduct = products.find(
+          (product) => product.name === newName
+        );
+
+        return {
+          ...feature,
+          product: {
+            id: selectedProduct ? selectedProduct.id : "",
+            name: newName,
+          },
+        };
+      }),
+    }));
+  };
+
+  // Handler to update feature name
   const handleFeatureNameChange = (featureIndex, newValue) => {
-    setUpdatedProduct(prevProduct => ({
+    setUpdatedProduct((prevProduct) => ({
       ...prevProduct,
       features: prevProduct.features.map((feature, index) => {
         if (index !== featureIndex) return feature;
         return { ...feature, name: newValue };
-      })
+      }),
     }));
   };
 
-  const handleProductIdChange = (featureIndex, newValue) => {
-    setUpdatedProduct(prevProduct => ({
-      ...prevProduct,
-      features: prevProduct.features.map((feature, index) => {
-        if (index !== featureIndex) return feature;
-        return {
-          ...feature,
-          product: { ...feature.product, id: newValue }
-        };
-      })
-    }));
-  };
-
-  const handleProductNameChange = (featureIndex, newValue) => {
-    setUpdatedProduct(prevProduct => ({
-      ...prevProduct,
-      features: prevProduct.features.map((feature, index) => {
-        if (index !== featureIndex) return feature;
-        return {
-          ...feature,
-          product: { ...feature.product, name: newValue }
-        };
-      })
-    }));
-  };
-
+  // Handler to update parameter value
   const handleParameterChange = (featureIndex, parameterIndex, newValue) => {
-    setUpdatedProduct(prevProduct => ({
+    setUpdatedProduct((prevProduct) => ({
       ...prevProduct,
       features: prevProduct.features.map((feature, index) => {
         if (index !== featureIndex) return feature;
@@ -63,69 +74,114 @@ const UpdateProduct = ({ product, productId, onProductUpdate }) => {
           parameters: feature.parameters.map((param, pIndex) => {
             if (pIndex !== parameterIndex) return param;
             return { ...param, value: newValue };
-          })
+          }),
         };
-      })
+      }),
     }));
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     onProductUpdate(updatedProduct);
   };
 
+  // Render loading or null if product is not yet fetched
+  if (!updatedProduct) {
+    return null; // or render loading indicator
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Update Product</h3>
-      <div>
-        <label htmlFor="productName">Product Name:</label>
-        <input
-          type="text"
-          id="productName"
-          value={updatedProduct.name}
-          onChange={(e) => setUpdatedProduct(prevProduct => ({ ...prevProduct, name: e.target.value }))}
-          required
-        />
-      </div>
-      {updatedProduct.features.map((feature, featureIndex) => (
-        <div key={feature.id}>
-          <h4>Feature Name:</h4>
-          <input
-            type="text"
-            value={feature.name}
-            onChange={(e) => handleFeatureNameChange(featureIndex, e.target.value)}
-            required
-          />
-          <h5>Product ID:</h5>
-          <input
-            type="text"
-            value={feature.product.id}
-            onChange={(e) => handleProductIdChange(featureIndex, e.target.value)}
-            required
-          />
-          <h5>Product Name:</h5>
-          <input
-            type="text"
-            value={feature.product.name}
-            onChange={(e) => handleProductNameChange(featureIndex, e.target.value)}
-            required
-          />
-          {feature.parameters.map((param, parameterIndex) => (
-            <div key={param.id}>
-              <label htmlFor={`param-${featureIndex}-${parameterIndex}`}>{param.name}:</label>
-              <input
-                type="text"
-                id={`param-${featureIndex}-${parameterIndex}`}
-                value={param.value}
-                onChange={(e) => handleParameterChange(featureIndex, parameterIndex, e.target.value)}
-                required
-              />
-            </div>
-          ))}
+    <div className="container mt-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-10">
+          <div className="card p-4 rounded">
+            <form onSubmit={handleSubmit}>
+              <h3>Update Product</h3>
+              <div className="mb-3">
+                <label htmlFor="productName" className="form-label">
+                  Product Name:
+                </label>
+                <input
+                  type="text"
+                  id="productName"
+                  value={updatedProduct.name}
+                  onChange={(e) =>
+                    setUpdatedProduct((prevProduct) => ({
+                      ...prevProduct,
+                      name: e.target.value,
+                    }))
+                  }
+                  className="form-control"
+                  required
+                />
+              </div>
+
+              {/* Horizontal line and updating features heading */}
+              <hr />
+              <h4>Updating Features</h4>
+
+              {updatedProduct.features.map((feature, featureIndex) => (
+                <div key={feature.id}>
+                  <h5>Feature Name:</h5>
+                  <input
+                    type="text"
+                    value={feature.name}
+                    onChange={(e) =>
+                      handleFeatureNameChange(featureIndex, e.target.value)
+                    }
+                    className="form-control mb-3"
+                    required
+                  />
+                  <h5>Product:</h5>
+                  <select
+                    value={feature.product.name}
+                    onChange={(e) =>
+                      handleProductNameChange(featureIndex, e.target.value)
+                    }
+                    className="form-control mb-3"
+                    required
+                  >
+                    {products.map((product) => (
+                      <option key={product.id} value={product.name}>
+                        {product.name}
+                      </option>
+                    ))}
+                  </select>
+                  {feature.parameters.map((param, parameterIndex) => (
+                    <div key={param.id}>
+                      <label
+                        htmlFor={`param-${featureIndex}-${parameterIndex}`}
+                        className="form-label"
+                      >
+                        {param.name}:
+                      </label>
+                      <input
+                        type="text"
+                        id={`param-${featureIndex}-${parameterIndex}`}
+                        value={param.value}
+                        onChange={(e) =>
+                          handleParameterChange(
+                            featureIndex,
+                            parameterIndex,
+                            e.target.value
+                          )
+                        }
+                        className="form-control mb-3"
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+              <button type="submit" className="btn btn-primary mt-3">
+                Update Product
+              </button>
+            </form>
+          </div>
         </div>
-      ))}
-      <button type="submit">Update Product</button>
-    </form>
+      </div>
+    </div>
   );
 };
 

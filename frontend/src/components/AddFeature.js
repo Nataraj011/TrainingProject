@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UserService from "../services/user.service";
 
 const AddFeatures = () => {
@@ -14,8 +14,33 @@ const AddFeatures = () => {
   const [parameterName3, setParameterName3] = useState('');
   const [parameterType3, setParameterType3] = useState('');
   const [parameterValue3, setParameterValue3] = useState('');
+  const [products, setProducts] = useState([]);
   const [addedFeatures, setAddedFeatures] = useState(null);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch products when component mounts
+    async function fetchProducts() {
+      try {
+        const response = await UserService.getall(); // Adjust this based on your UserService implementation
+        setProducts(response.data); // Assuming response contains an array of products
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  const handleProductChange = (e) => {
+    const selectedProductId = e.target.value;
+    const selectedProduct = products.find(product => product.id === parseInt(selectedProductId));
+
+    if (selectedProduct) {
+      setProductId(selectedProductId); // Set productId directly from the selected value
+      setProductName(selectedProduct.name);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,60 +86,65 @@ const AddFeatures = () => {
 
   return (
     <div className="container">
-      <h2 className="mt-4">Add Features</h2>
-      <form onSubmit={handleSubmit}>
-
-      <div className="mb-3">
-          <label htmlFor="featureName" className="form-label">Feature Name:</label>
-          <input type="text" id="featureName" className="form-control" value={featureName} onChange={(e) => setFeatureName(e.target.value)} required />
+      <h2 className="mt-4 text-center">Add Features</h2>
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card p-4">
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="featureName" className="form-label">Feature Name:</label>
+                <input type="text" id="featureName" className="form-control rounded" value={featureName} onChange={(e) => setFeatureName(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="productDropdown" className="form-label">Select Product:</label>
+                <select id="productDropdown" className="form-control rounded" onChange={handleProductChange} value={productId} required>
+                  <option value="">-- Select Product --</option>
+                  {products.map(product => (
+                    <option key={product.id} value={product.id.toString()}>{product.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterName1" className="form-label">Parameter Name 1:</label>
+                <input type="text" id="parameterName1" className="form-control rounded" value={parameterName1} onChange={(e) => setParameterName1(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterType1" className="form-label">Parameter Type 1:</label>
+                <input type="text" id="parameterType1" className="form-control rounded" value={parameterType1} onChange={(e) => setParameterType1(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterValue1" className="form-label">Parameter Value 1:</label>
+                <input type="text" id="parameterValue1" className="form-control rounded" value={parameterValue1} onChange={(e) => setParameterValue1(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterName2" className="form-label">Parameter Name 2:</label>
+                <input type="text" id="parameterName2" className="form-control rounded" value={parameterName2} onChange={(e) => setParameterName2(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterType2" className="form-label">Parameter Type 2:</label>
+                <input type="text" id="parameterType2" className="form-control rounded" value={parameterType2} onChange={(e) => setParameterType2(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterValue2" className="form-label">Parameter Value 2:</label>
+                <input type="text" id="parameterValue2" className="form-control rounded" value={parameterValue2} onChange={(e) => setParameterValue2(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterName3" className="form-label">Parameter Name 3:</label>
+                <input type="text" id="parameterName3" className="form-control rounded" value={parameterName3} onChange={(e) => setParameterName3(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterType3" className="form-label">Parameter Type 3:</label>
+                <input type="text" id="parameterType3" className="form-control rounded" value={parameterType3} onChange={(e) => setParameterType3(e.target.value)} required />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="parameterValue3" className="form-label">Parameter Value 3:</label>
+                <input type="text" id="parameterValue3" className="form-control rounded" value={parameterValue3} onChange={(e) => setParameterValue3(e.target.value)} required />
+              </div>
+              <button type="submit" className="btn btn-primary">Add Features</button>
+            </form>
+          </div>
         </div>
-        <div className="mb-3">
-          <label htmlFor="productName" className="form-label">Product Name:</label>
-          <input type="text" id="productName" className="form-control" value={productName} onChange={(e) => setProductName(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="productId" className="form-label">Product ID:</label>
-          <input type="number" id="productId" className="form-control" value={productId} onChange={(e) => setProductId(e.target.value)} required />
-        </div>
-       
-        <div className="mb-3">
-          <label htmlFor="parameterName1" className="form-label">Parameter Name 1:</label>
-          <input type="text" id="parameterName1" className="form-control" value={parameterName1} onChange={(e) => setParameterName1(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="parameterType1" className="form-label">Parameter Type 1:</label>
-          <input type="text" id="parameterType1" className="form-control" value={parameterType1} onChange={(e) => setParameterType1(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="parameterValue1" className="form-label">Parameter Value 1:</label>
-          <input type="text" id="parameterValue1" className="form-control" value={parameterValue1} onChange={(e) => setParameterValue1(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="parameterName2" className="form-label">Parameter Name 2:</label>
-          <input type="text" id="parameterName2" className="form-control" value={parameterName2} onChange={(e) => setParameterName2(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="parameterType2" className="form-label">Parameter Type 2:</label>
-          <input type="text" id="parameterType2" className="form-control" value={parameterType2} onChange={(e) => setParameterType2(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="parameterValue2" className="form-label">Parameter Value 2:</label>
-          <input type="text" id="parameterValue2" className="form-control" value={parameterValue2} onChange={(e) => setParameterValue2(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="parameterName3" className="form-label">Parameter Name 3:</label>
-          <input type="text" id="parameterName3" className="form-control" value={parameterName3} onChange={(e) => setParameterName3(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="parameterType3" className="form-label">Parameter Type 3:</label>
-          <input type="text" id="parameterType3" className="form-control" value={parameterType3} onChange={(e) => setParameterType3(e.target.value)} required />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="parameterValue3" className="form-label">Parameter Value 3:</label>
-          <input type="text" id="parameterValue3" className="form-control" value={parameterValue3} onChange={(e) => setParameterValue3(e.target.value)} required />
-        </div>
-        <button type="submit" className="btn btn-primary">Add Features</button>
-      </form>
+      </div>
       {addedFeatures && (
         <div className="mt-4">
           <h3>Features added successfully:</h3>

@@ -24,21 +24,27 @@ const DeleteFeature = () => {
   };  
 
   return (
-    <div className="container">
-      <h2 className="mt-4">Delete Feature</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="featureId" className="form-label">Feature ID:</label>
-          <input type="number" id="featureId" className="form-control" value={featureId} onChange={(e) => setFeatureId(e.target.value)} required />
+    <div className="container mt-4">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card p-4 rounded">
+            <h2 className="mt-4">Delete Feature</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="featureId" className="form-label">Feature ID:</label>
+                <input type="number" id="featureId" className="form-control" value={featureId} onChange={(e) => setFeatureId(e.target.value)} required />
+              </div>
+              <button type="submit" className="btn btn-danger">Delete Feature</button>
+            </form>
+            {success && (
+              <div className="mt-4">
+                <p className="text-success">Feature deleted successfully.</p>
+              </div>
+            )}
+            {error && <p className="mt-4 text-danger">Error: {error}</p>}
+          </div>
         </div>
-        <button type="submit" className="btn btn-danger">Delete Feature</button>
-      </form>
-      {success && (
-        <div className="mt-4">
-          <p className="text-success">Feature deleted successfully.</p>
-        </div>
-      )}
-      {error && <p className="mt-4 text-danger">Error: {error}</p>}
+      </div>
     </div>
   );
 };

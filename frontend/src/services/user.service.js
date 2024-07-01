@@ -216,31 +216,49 @@ const getproductbynamemgr = (name) => {
 };
 
 const updaterolebyuser = (id, role) => {
-  return axios.put(`${ADMIN_URL}users/updaterole?id=${id}`, role, {
+  return axios.put(`${ADMIN_URL}users/updaterole?userId=${id}`, role, {
     headers: {
       ...authHeader()
     }
   });
 };
 
+const getalluser = () => {
+  console.log(authHeader());
+  return axios.get(ADMIN_URL + "getallusers", {
+    headers: {
+  'Content-Type':'application/json',    
+  'Access-Control-Allow-Origin': '*',
+      ...authHeader()
+    }
+     // Set the payload as params
+  });
+};
 
 
+const getallusermgr = () => {
+  console.log(authHeader());
+  return axios.get(MANAGER_URL + "getallusersmgr", {
+    headers: {
+  'Content-Type':'application/json',    
+  'Access-Control-Allow-Origin': '*',
+      ...authHeader()
+    }
+     // Set the payload as params
+  });
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const getallrole = () => {
+  console.log(authHeader());
+  return axios.get(ADMIN_URL + "getallroles", {
+    headers: {
+  'Content-Type':'application/json',    
+  'Access-Control-Allow-Origin': '*',
+      ...authHeader()
+    }
+     // Set the payload as params
+  });
+};
 
 
 
@@ -266,7 +284,10 @@ const UserService = {
   getquotation,
   getproductbynameadmin,
   getproductbynamemgr,
-  updaterolebyuser
+  updaterolebyuser,
+  getalluser,
+  getallrole,
+  getallusermgr
 
 
 };

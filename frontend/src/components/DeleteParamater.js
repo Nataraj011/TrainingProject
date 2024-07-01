@@ -24,21 +24,27 @@ const DeleteParameter = () => {
   };    
 
   return (
-    <div className="container">
-      <h2 className="mt-4">Delete Parameter</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="paramId" className="form-label">Parameter ID:</label>
-          <input type="number" id="paramId" className="form-control" value={paramId} onChange={(e) => setParamId(e.target.value)} required />
+    <div className="container mt-4">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card p-4 rounded">
+            <h2 className="mt-4">Delete Parameter</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label htmlFor="paramId" className="form-label">Parameter ID:</label>
+                <input type="number" id="paramId" className="form-control" value={paramId} onChange={(e) => setParamId(e.target.value)} required />
+              </div>
+              <button type="submit" className="btn btn-danger">Delete Parameter</button>
+            </form>
+            {success && (
+              <div className="mt-4">
+                <p className="text-success">Parameter deleted successfully.</p>
+              </div>
+            )}
+            {error && <p className="mt-4 text-danger">Error: {error}</p>}
+          </div>
         </div>
-        <button type="submit" className="btn btn-danger">Delete Parameter</button>
-      </form>
-      {success && (
-        <div className="mt-4">
-          <p className="text-success">Parameter deleted successfully.</p>
-        </div>
-      )}
-      {error && <p className="mt-4 text-danger">Error: {error}</p>}
+      </div>
     </div>
   );
 };

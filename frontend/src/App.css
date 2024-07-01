@@ -51,6 +51,52 @@ label {
 .btn-primary:hover {
   background-color: #1e90ff; /* Darker shade of blue on hover */
 }
+.radiant-sky-blue {
+  background-color: #87ceeb; /* Set the background color to radiant sky blue */
+  border-radius: 10px; /* Apply border radius for a rounded look */
+}
+
+/* Additional Styles */
+.form-container {
+  text-align: center;
+}
+
+.form-control-medium {
+  width: 250px; /* Adjust width as needed */
+  border-radius: 8px; /* Medium border radius */
+}
+
+.btn-submit {
+  background-color: #87ceeb; /* Sky blue background */
+  color: #fff; /* White text color */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Adjust padding */
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer; /* Add pointer cursor on hover */
+}
+
+.btn-submit:hover {
+  background-color: #1e90ff; /* Darker shade of blue on hover */
+}
+.product {
+  width: 80%;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  background-color: white; /* Very mild sky blue color */
+}
+
+.product-divider {
+  border: 0;
+  height: 1px;
+  background-color: #ddd;
+}
+
+
+
+
+
 
 
 

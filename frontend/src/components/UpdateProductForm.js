@@ -1,22 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UserService from "../services/user.service";
 import UpdateProduct from "./UpdateProduct";
 
 const UpdateProductForm = () => {
   const [productId, setProductId] = useState('');
   const [product, setProduct] = useState(null);
+  const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await UserService.getall();
+        if (response.data) {
+          setProducts(response.data);
+        } else {
+          setProducts([]);
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+        setError('Failed to fetch products.');
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const handleProductIdChange = (e) => {
     setProductId(e.target.value);
+    setProduct(null); // Reset product details when selecting a new product
+    setShowUpdateForm(false); // Hide update form until product details are fetched
+    setResponseMessage(''); // Clear any previous response messages
+    setError(null); // Clear any previous errors
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await UserService.getproductbyid(productId);
+      const response = await UserService.getproductbyidadmin(productId);
       if (response.data) {
         setProduct(response.data);
         setShowUpdateForm(true);
@@ -41,11 +65,9 @@ const UpdateProductForm = () => {
     }
   };
 
-
   const handleProductUpdate = async (updatedProduct) => {
     try {
-      await UserService.updateproduct(productId, updatedProduct);
-      // Optional: You may want to fetch the updated product here to refresh the data
+      await UserService.updateProduct(productId, updatedProduct);
       setShowUpdateForm(false);
       setResponseMessage('Product updated successfully.');
     } catch (error) {
@@ -56,24 +78,46 @@ const UpdateProductForm = () => {
   };
 
   return (
-    <div className="container">
-      <h2 className="mt-4">Update Product</h2>
-      <form onSubmit={handleFormSubmit}>
-        <label htmlFor="productId">Enter Product ID:</label>
-        <input 
-          type="text" 
-          id="productId" 
-          value={productId} 
-          onChange={handleProductIdChange} 
-          required 
-        />
-        <button type="submit">Get Product Details</button>
-      </form>
-      {error && <p className="mt-4 text-danger">{error}</p>}
-      {responseMessage && <p className="mt-4">{responseMessage}</p>}
-      {showUpdateForm && product && (
-        <UpdateProduct product={product} onProductUpdate={handleProductUpdate} />
-      )}
+    <div className="container mt-4">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card p-4 rounded">
+            <h2 className="mb-4">Update Product and Features</h2>
+            <form onSubmit={handleFormSubmit}>
+              <div className="form-group">
+                <label htmlFor="productName">Select Product:</label>
+                <select
+                  id="productName"
+                  className="form-control"
+                  value={productId}
+                  onChange={handleProductIdChange}
+                  required
+                >
+                  <option value="">Select a product</option>
+                  {products.map((prod) => (
+                    <option key={prod.id} value={prod.id}>
+                      {prod.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Get Product Details
+              </button>
+            </form>
+            {error && <p className="mt-4 text-danger">{error}</p>}
+            {responseMessage && <p className="mt-4">{responseMessage}</p>}
+            {showUpdateForm && product && (
+              <UpdateProduct
+                product={product}
+                productId={productId}
+                onProductUpdate={handleProductUpdate}
+                products={products} // Pass products to UpdateProduct for dropdowns
+              />
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

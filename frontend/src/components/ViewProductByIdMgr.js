@@ -30,50 +30,56 @@ const ViewProductByIdMgr = () => {
 
   return (
     <div className="container">
-      <h2 className="mt-4">View Product By ID</h2>
-      <div className="input-group mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Enter product ID"
-          value={productId}
-          onChange={(e) => setProductId(e.target.value)}
-        />
-        <div className="input-group-append">
-          <button
-            className="btn btn-outline-secondary"
-            type="button"
-            onClick={getProductById}
-          >
-            View Product
-          </button>
-        </div>
-      </div>
-      {error && <p className="mt-2 text-danger">{error}</p>}
-      {product && (
-        <div>
-          <h3>Product: {product.name}</h3>
-          {product.features && product.features.length > 0 && (
-            <div>
-              <h4>Features:</h4>
-              <ul className="list-group">
-                {product.features.map(feature => (
-                  <li key={feature.id} className="list-group-item">
-                    <strong>{feature.name}</strong>:
+      <div className="row justify-content-center">
+        <div className="col-lg-6">
+          <div className="card p-4 rounded">
+            <h2 className="mb-4">View Product By ID</h2>
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter product ID"
+                value={productId}
+                onChange={(e) => setProductId(e.target.value)}
+              />
+              <div className="input-group-append">
+                <button
+                  className="btn btn-outline-primary"
+                  type="button"
+                  onClick={getProductById}
+                >
+                  View Product
+                </button>
+              </div>
+            </div>
+            {error && <p className="mt-2 text-danger">{error}</p>}
+            {product && (
+              <div>
+                <h3>Product: {product.name}</h3>
+                {product.features && product.features.length > 0 && (
+                  <div>
+                    <h4>Features:</h4>
                     <ul className="list-group">
-                      {feature.parameters.map(parameter => (
-                        <li key={parameter.id} className="list-group-item">
-                          <strong>{parameter.name}</strong>: {parameter.value} ({parameter.type})
+                      {product.features.map(feature => (
+                        <li key={feature.id} className="list-group-item">
+                          <strong>{feature.name}</strong>:
+                          <ul className="list-group">
+                            {feature.parameters.map(parameter => (
+                              <li key={parameter.id} className="list-group-item">
+                                <strong>{parameter.name}</strong>: {parameter.value} ({parameter.type})
+                              </li>
+                            ))}
+                          </ul>
                         </li>
                       ))}
                     </ul>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
