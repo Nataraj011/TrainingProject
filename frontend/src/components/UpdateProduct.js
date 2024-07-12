@@ -15,8 +15,8 @@ const UpdateProduct = ({ product, onProductUpdate, products }) => {
           id: feature.id,
           name: feature.name,
           product: {
-            id: feature.product ? feature.product.id : "",
-            name: feature.product ? feature.product.name : product.name, // Set default to current product name
+            id: feature.product? feature.product.id : product.id,
+            name: feature.product? feature.product.name : product.name, // Set default to current product name
           },
           parameters: feature.parameters.map((param) => ({
             id: param.id,
@@ -29,22 +29,22 @@ const UpdateProduct = ({ product, onProductUpdate, products }) => {
     }
   }, [product]);
 
-  // Handler to update product name, ID, and sync between them
+  // Handler to update product name and ID
   const handleProductNameChange = (featureIndex, newName) => {
+    // Find the selected product object from products array
+    const selectedProduct = products.find((prod) => prod.name === newName);
+
+    if (!selectedProduct) return; // Handle case where selected product is not found
+
     setUpdatedProduct((prevProduct) => ({
       ...prevProduct,
       features: prevProduct.features.map((feature, index) => {
         if (index !== featureIndex) return feature;
 
-        // Find the product object from products array
-        const selectedProduct = products.find(
-          (product) => product.name === newName
-        );
-
         return {
           ...feature,
           product: {
-            id: selectedProduct ? selectedProduct.id : "",
+            id: selectedProduct.id,
             name: newName,
           },
         };
@@ -142,9 +142,9 @@ const UpdateProduct = ({ product, onProductUpdate, products }) => {
                     className="form-control mb-3"
                     required
                   >
-                    {products.map((product) => (
-                      <option key={product.id} value={product.name}>
-                        {product.name}
+                    {products.map((prod) => (
+                      <option key={prod.id} value={prod.name}>
+                        {prod.name}
                       </option>
                     ))}
                   </select>

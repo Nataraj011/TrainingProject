@@ -51,7 +51,6 @@ const delFeatures = (id) => {
   });
 };
 const delProduct = (id) => {
-  console.log(authHeader());
   return axios.post(ADMIN_URL + "deleteproductbyid",id, {
     headers: {
       'Content-Type':'application/json',    
@@ -62,6 +61,17 @@ const delProduct = (id) => {
   });
 };
 
+
+const delQuotation= (id) => {
+  return axios.post(MANAGER_URL + "deletequotationbyid",id, {
+    headers: {
+      'Content-Type':'application/json',    
+  'Access-Control-Allow-Origin': '*',
+      ...authHeader()
+    }
+     // Set the payload as params
+  });
+};
 const delparam = (id) => {
   console.log(authHeader());
   return axios.post(ADMIN_URL + "deleteparameterbyid",id, {
@@ -89,6 +99,19 @@ const getall = () => {
 };
 
 
+const getallquotations = () => {
+  console.log(authHeader());
+  return axios.get(MANAGER_URL + "getallquotations", {
+    headers: {
+  'Content-Type':'application/json',    
+  'Access-Control-Allow-Origin': '*',
+      ...authHeader()
+    }
+     // Set the payload as params
+  });
+};
+
+
 const getproductbyid = (id) => {
   console.log(authHeader());
   return axios.get(`${ADMIN_URL}getproductsbyId?id=${id}`, {
@@ -101,15 +124,36 @@ const getproductbyid = (id) => {
 };
 
 
-
-
-const updateproduct = (productId, updatedProduct) => {
-  console.log(authHeader());
-  return axios.put(ADMIN_URL + "updateproduct?id=" + productId, updatedProduct, {
+const getfeaturebyproductid = (productId) => {
+ 
+  return axios.get(`${MANAGER_URL}getfeaturesbyproductid?productId=${productId}`, {
     headers: {
-      'Content-Type': 'application/json',    
-      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json',
       ...authHeader()
+    }
+  });
+};
+
+const getfeaturebyid = (Id) => {
+ 
+  return axios.get(`${MANAGER_URL}getfeaturebyid?id=${Id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader()
+    }
+  });
+};
+
+
+
+
+
+const updateproduct = (updatedProduct) => {
+  console.log(updatedProduct);
+  return axios.put(`${ADMIN_URL}updateproduct`, updatedProduct, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader() // Assuming authHeader() provides the necessary headers
     }
   });
 };
@@ -263,6 +307,8 @@ const getallrole = () => {
 
 
 
+
+
 const UserService = {
   getPublicContent,
   getUserBoard,
@@ -287,7 +333,11 @@ const UserService = {
   updaterolebyuser,
   getalluser,
   getallrole,
-  getallusermgr
+  getallusermgr,
+  getfeaturebyproductid,
+  getfeaturebyid,
+  getallquotations,
+  delQuotation
 
 
 };

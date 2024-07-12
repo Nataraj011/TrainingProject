@@ -37,17 +37,17 @@ const ManagerBoard = () => {
                   </li>
                   <li>
                     <Link to="/get-quotation" className="dropdown-item">
-                      Get Quotation
+                      View Quotation
                     </Link>
                   </li>
-                  <li>
+                  {/* <li>
                     <Link
                       to="/view-product-by-id-mgr"
                       className="dropdown-item"
                     >
                       View Product by ID
                     </Link>
-                  </li>
+                  </li> */}
                   <li>
                     <Link
                       to="/view-product-by-name-mgr"

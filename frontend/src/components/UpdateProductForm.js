@@ -67,7 +67,7 @@ const UpdateProductForm = () => {
 
   const handleProductUpdate = async (updatedProduct) => {
     try {
-      await UserService.updateProduct(productId, updatedProduct);
+      await UserService.updateproduct(updatedProduct);
       setShowUpdateForm(false);
       setResponseMessage('Product updated successfully.');
     } catch (error) {

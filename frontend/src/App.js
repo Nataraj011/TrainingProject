@@ -5,14 +5,15 @@ import "./App.css";
 
 import AuthService from "./services/auth.service";
 
+
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
 
 import BoardAdmin from "./components/BoardAdmin";
-import AddProduct from "./components/AddProduct";
+
 import EventBus from "./common/EventBus";
-import AddFeatures from "./components/AddFeature";
+
 
 import DeleteFeature from "./components/DeleteFeature";
 import DeleteParameter from "./components/DeleteParamater";
@@ -29,12 +30,12 @@ import ViewProductByIdMgr from "./components/ViewProductByIdMgr";
 
 import ViewProductsByIdadmin from "./components/ViewProductsByIdadmin";
 import AddQuotation from "./components/AddQuotation";
-import ViewQuotation from "./components/ViewQuotation";
 import ProductByNameadmin from "./components/ProductByNameadmin";
 import ProductByNamemgr from "./components/ProductByNamemgr";
 import UpdateRole from "./components/UpdateRole";
 import Homepage from "./components/Homepage";
 import AddProductAndFeatures from "./components/AddProductandFeatures";
+import ViewAllQuotation from "./components/ViewAllQuotations";
 
 const App = () => {
   const [showManagerBoard, setShowManagerBoard] = useState(false);
@@ -161,7 +162,7 @@ const App = () => {
           <Route path="/view-all-products-mgr" element={<ViewAllProductsMgr />} />
           <Route path="/view-product-by-id-mgr" element={<ViewProductByIdMgr />} />
           <Route path="/create-quotation" element={<AddQuotation />} />
-          <Route path="/get-quotation" element={<ViewQuotation />} />
+          <Route path="/get-quotation" element={<ViewAllQuotation/>} />
           <Route path="/updaterole" element={<UpdateRole />} />
           <Route path="/add-products" element={<AddProductAndFeatures />} />
         </Routes>

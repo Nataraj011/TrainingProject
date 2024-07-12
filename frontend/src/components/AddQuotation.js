@@ -3,30 +3,21 @@ import UserService from "../services/user.service";
 
 const AddQuotation = () => {
   const [formData, setFormData] = useState({
-    userId: "", // Changed userId to string for storing the user ID
-    productId: "",
-    totalAmount: 0,
+    productId: "", // Stores the selected product ID
+    featureId: "", // Stores the selected feature ID
+    amount: 0, // Changed from totalAmount to amount
     quantity: 0,
+    totalAmount: 0, // Total amount to be displayed
   });
-  const [users, setUsers] = useState([]);
   const [products, setProducts] = useState([]);
+  const [features, setFeatures] = useState([]);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await UserService.getallusermgr(); // Adjust based on your actual service method
-        setUsers(response.data); // Assuming response contains an array of users
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        setError("Error fetching users. Please try again later.");
-      }
-    };
-
     const fetchProducts = async () => {
       try {
-        const response = await UserService.getall(); // Adjust based on your actual service method
+        const response = await UserService.getall(); // Fetch all products
         setProducts(response.data); // Assuming response contains an array of products
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -34,9 +25,27 @@ const AddQuotation = () => {
       }
     };
 
-    fetchUsers();
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    // Fetch features based on selected productId
+    const fetchFeatures = async () => {
+      try {
+        if (formData.productId) {
+          const response = await UserService.getfeaturebyproductid(formData.productId); // Fetch features by productId
+          setFeatures(response.data); // Assuming response contains an array of features
+        } else {
+          setFeatures([]); // Reset features if no productId selected
+        }
+      } catch (error) {
+        console.error("Error fetching features:", error);
+        setError("Error fetching features. Please try again later.");
+      }
+    };
+
+    fetchFeatures();
+  }, [formData.productId]); // Execute whenever productId changes
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,23 +53,34 @@ const AddQuotation = () => {
       ...prevData,
       [name]: value,
     }));
+    if (name === "amount" || name === "quantity") {
+      calculateTotalAmount({ ...formData, [name]: parseFloat(value) }); // Pass updated form data
+    }
+  };
+
+  const calculateTotalAmount = ({ amount, quantity }) => {
+    const total = parseFloat(amount) * parseInt(quantity);
+    setFormData((prevData) => ({
+      ...prevData,
+      totalAmount: total.toFixed(2), // Ensure total amount has two decimal places
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await UserService.addQuotation(formData);
-      setSuccess(true);
-      setError(null);
+      await UserService.addquotation(formData); // Submit quotation data
+      setSuccess(true); // Set success message
+      setError(null); // Clear error message
     } catch (error) {
       console.error("Error adding quotation:", error);
       if (
         (error.response && error.response.status === 404) ||
         (error.response && error.response.status === 500)
       ) {
-        setError("Product or user ID is invalid.");
+        setError("Product or user ID is invalid."); // Handle specific errors
       } else {
-        setError("Error adding quotation.");
+        setError("Error adding quotation."); // Generic error message
       }
     }
   };
@@ -72,24 +92,6 @@ const AddQuotation = () => {
           <div className="card p-4 rounded">
             <h2 className="mb-4">Add Quotation</h2>
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label htmlFor="userId">User:</label>
-                <select
-                  className="form-control"
-                  id="userId"
-                  name="userId"
-                  value={formData.userId}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">-- Select User --</option>
-                  {users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.username}
-                    </option>
-                  ))}
-                </select>
-              </div>
               <div className="form-group">
                 <label htmlFor="productId">Product Name:</label>
                 <select
@@ -109,13 +111,32 @@ const AddQuotation = () => {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="totalAmount">Total Amount:</label>
+                <label htmlFor="featureId">Product Feature:</label>
+                <select
+                  className="form-control"
+                  id="featureId"
+                  name="featureId"
+                  value={formData.featureId}
+                  onChange={handleChange}
+                  required
+                  disabled={!formData.productId} // Disable if no productId selected
+                >
+                  <option value="">-- Select Feature --</option>
+                  {features.map((feature) => (
+                    <option key={feature.id} value={feature.id}>
+                      {feature.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="amount">Amount:</label>
                 <input
                   type="number"
                   className="form-control"
-                  id="totalAmount"
-                  name="totalAmount"
-                  value={formData.totalAmount}
+                  id="amount"
+                  name="amount"
+                  value={formData.amount}
                   onChange={handleChange}
                   required
                 />
@@ -130,6 +151,17 @@ const AddQuotation = () => {
                   value={formData.quantity}
                   onChange={handleChange}
                   required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="totalAmount">Total Amount:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="totalAmount"
+                  name="totalAmount"
+                  value={formData.totalAmount}
+                  readOnly
                 />
               </div>
               <button type="submit" className="btn btn-primary">

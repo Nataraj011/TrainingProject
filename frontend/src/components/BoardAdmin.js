@@ -63,7 +63,7 @@ const BoardAdmin = () => {
                   </li>
                   <li>
                     <Link to="/update-product" className="dropdown-item">
-                      Update Products And Features
+                      Update Products
                     </Link>
                   </li>
                   {/* <li>
