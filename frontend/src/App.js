@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome, faUser, faSignInAlt, faUserPlus, faSignOutAlt, faClipboardList, faUserCog, faUsers } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 import AuthService from "./services/auth.service";
 
-
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
-
 import BoardAdmin from "./components/BoardAdmin";
-
 import EventBus from "./common/EventBus";
-
+import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import DeleteFeature from "./components/DeleteFeature";
 import DeleteParameter from "./components/DeleteParamater";
 import DeleteProduct from "./components/DeleteProduct";
-
 import ViewAllProducts from "./components/ViewAllProducts";
 import UpdateProductForm from "./components/UpdateProductForm";
 import UserBoard from "./components/UserBoard";
@@ -27,7 +25,6 @@ import ProductByName from "./components/ProductByName";
 import ManagerBoard from "./components/ManagerBoard";
 import ViewAllProductsMgr from "./components/ViewallProductsMgr";
 import ViewProductByIdMgr from "./components/ViewProductByIdMgr";
-
 import ViewProductsByIdadmin from "./components/ViewProductsByIdadmin";
 import AddQuotation from "./components/AddQuotation";
 import ProductByNameadmin from "./components/ProductByNameadmin";
@@ -36,6 +33,8 @@ import UpdateRole from "./components/UpdateRole";
 import Homepage from "./components/Homepage";
 import AddProductAndFeatures from "./components/AddProductandFeatures";
 import ViewAllQuotation from "./components/ViewAllQuotations";
+import AllUsers from "./components/AllUsers";
+import UpdateQuotationForm from "./components/UpdateQuotation";
 
 const App = () => {
   const [showManagerBoard, setShowManagerBoard] = useState(false);
@@ -48,9 +47,7 @@ const App = () => {
 
     if (user) {
       setShowUserBoard(user.role.includes("ROLE_CUSTOMER"));
-      setCurrentUser(user);
       setShowManagerBoard(user.role.includes("ROLE_MANAGER"));
-      setCurrentUser(user);
       setShowAdminBoard(user.role.includes("ROLE_ADMIN"));
       setCurrentUser(user);
     }
@@ -74,9 +71,9 @@ const App = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-gradient-primary">
+      <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
         <Link to={"/"} className="navbar-brand">
-          Products
+          <FontAwesomeIcon icon={faClipboardList} /> Products
         </Link>
         <button
           className="navbar-toggler"
@@ -92,24 +89,24 @@ const App = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <div className="navbar-nav mr-auto">
             <Link to={"/home"} className="nav-link">
-              Home
+              <FontAwesomeIcon icon={faHome} /> Home
             </Link>
 
             {showManagerBoard && (
               <Link to={"/manager"} className="nav-link">
-                Manager Board
+                <FontAwesomeIcon icon={faUserCog} /> Manager Board
               </Link>
             )}
 
             {showAdminBoard && (
               <Link to={"/admin"} className="nav-link">
-                Admin Board
+                <FontAwesomeIcon icon={faUsers} /> Admin Board
               </Link>
             )}
 
             {showUserBoard && (
               <Link to={"/user"} className="nav-link">
-                User
+                <FontAwesomeIcon icon={faUser} /> User
               </Link>
             )}
           </div>
@@ -117,20 +114,19 @@ const App = () => {
           {currentUser ? (
             <div className="navbar-nav ml-auto">
               <Link to={"/profile"} className="nav-link">
-                {currentUser.username}
+                <FontAwesomeIcon icon={faUser} /> {currentUser.username}
               </Link>
               <Link to={"/login"} className="nav-link" onClick={logOut}>
-                LogOut
+                <FontAwesomeIcon icon={faSignOutAlt} /> LogOut
               </Link>
             </div>
           ) : (
             <div className="navbar-nav ml-auto">
               <Link to={"/login"} className="nav-link">
-                Login
+                <FontAwesomeIcon icon={faSignInAlt} /> Login
               </Link>
-
               <Link to={"/register"} className="nav-link">
-                Sign Up
+                <FontAwesomeIcon icon={faUserPlus} /> Sign Up
               </Link>
             </div>
           )}
@@ -145,8 +141,6 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<BoardAdmin />} />
-          {/* <Route path="/add-product" element={<AddProduct />} />
-          <Route path="/add-features" element={<AddFeatures />} /> */}
           <Route path="/delete-param" element={<DeleteParameter />} />
           <Route path="/delete-feature" element={<DeleteFeature />} />
           <Route path="/delete-product" element={<DeleteProduct />} />
@@ -163,8 +157,10 @@ const App = () => {
           <Route path="/view-product-by-id-mgr" element={<ViewProductByIdMgr />} />
           <Route path="/create-quotation" element={<AddQuotation />} />
           <Route path="/get-quotation" element={<ViewAllQuotation/>} />
-          <Route path="/updaterole" element={<UpdateRole />} />
+          <Route path="/update-rolepage/:userId" element={<UpdateRole/>}/>
+          <Route exact path="/update-quotation/:quotationId" element={<UpdateQuotationForm/>} />
           <Route path="/add-products" element={<AddProductAndFeatures />} />
+          <Route path="/updateroles" element={<AllUsers/>} />
         </Routes>
       </div>
     </div>

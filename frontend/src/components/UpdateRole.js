@@ -1,14 +1,15 @@
-
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import UserService from "../services/user.service";
 
 const UpdateRole = () => {
-  const [userId, setUserId] = useState(""); // State for user ID
+  const { userId } = useParams(); // Get userId from URL
   const [selectedRole, setSelectedRole] = useState(null); // State for selected role object
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(""); // State for selected user ID
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -33,13 +34,20 @@ const UpdateRole = () => {
     fetchRoles();
   }, []);
 
+  useEffect(() => {
+    // Set the userId state when it's available from URL params
+    if (userId) {
+      setSelectedUserId(userId); // Corrected to setSelectedUserId
+    }
+  }, [userId]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setError("");
 
     try {
-      const selectedUser = users.find((user) => user.id.toString() === userId);
+      const selectedUser = users.find((user) => user.id.toString() === selectedUserId);
       if (!selectedUser) {
         throw new Error("User not found.");
       }
@@ -48,7 +56,7 @@ const UpdateRole = () => {
         throw new Error("Please select a role.");
       }
 
-      await UserService.updaterolebyuser(userId, selectedRole); // Pass entire selectedRole object
+      await UserService.updaterolebyuser(selectedUserId, selectedRole); // Pass entire selectedRole object
       setMessage("Role updated successfully!");
     } catch (error) {
       if (error.response && error.response.status === 404) {
@@ -74,19 +82,12 @@ const UpdateRole = () => {
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label>User Username:</label>
-                <select
+                <input
+                  type="text"
                   className="form-control"
-                  value={userId}
-                  onChange={(e) => setUserId(e.target.value)}
-                  required
-                >
-                  <option value="">Select User</option>
-                  {users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.username}
-                    </option>
-                  ))}
-                </select>
+                  value={users.find(user => user.id === parseInt(selectedUserId))?.username || ""}
+                  disabled
+                />
               </div>
               <div className="form-group">
                 <label>Role:</label>

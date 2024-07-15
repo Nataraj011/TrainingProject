@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import UserService from "../services/user.service";
+import "./ViewAllQuotation.css"; // Assuming you have a CSS file for styling
 
 const ViewAllQuotation = () => {
   const [quotations, setQuotations] = useState([]);
@@ -73,37 +75,43 @@ const ViewAllQuotation = () => {
         <div className="col-md-10">
           <div className="card p-4 rounded">
             <h2 className="mb-4">All Quotations</h2>
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Quotation ID</th>
-                  <th>Product Name</th>
-                  <th>Feature Name</th>
-                  <th>Total Amount</th>
-                  <th>Quantity</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {quotations.map((quotation) => (
-                  <tr key={quotation.id}>
-                    <td>{quotation.id}</td>
-                    <td>{productsMap[quotation.productId]}</td>
-                    <td>{featuresMap[quotation.featureId]}</td>
-                    <td>{quotation.totalAmount}</td>
-                    <td>{quotation.quantity}</td>
-                    <td>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => handleDeleteQuotation(quotation.id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
+            <div className="table-responsive">
+              <table className="table table-striped table-bordered">
+                <thead className="thead-dark">
+                  <tr>
+                    <th>Product Name</th>
+                    <th>Feature Name</th>
+                    <th>Total Amount</th>
+                    <th>Quantity</th>
+                    <th>Apply Discount</th>
+                    <th>Delete</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {quotations.map((quotation) => (
+                    <tr key={quotation.id}>
+                      <td>{productsMap[quotation.productId]}</td>
+                      <td>{featuresMap[quotation.featureId]}</td>
+                      <td>{quotation.totalAmount}</td>
+                      <td>{quotation.quantity}</td>
+                      <td>
+                        <Link to={`/update-quotation/${quotation.id}`} className="btn btn-primary btn-sm mr-2">
+                          Apply Discount
+                        </Link>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDeleteQuotation(quotation.id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
             {error && <p className="text-danger mt-3">{error}</p>}
           </div>
         </div>

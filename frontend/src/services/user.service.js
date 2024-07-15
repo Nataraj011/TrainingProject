@@ -112,9 +112,32 @@ const getallquotations = () => {
 };
 
 
+const updatequotation = (updatedProduct) => {
+  console.log(updatedProduct);
+  return axios.put(`${MANAGER_URL}updatequotation`, updatedProduct, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader() // Assuming authHeader() provides the necessary headers
+    }
+  });
+};
+
+
 const getproductbyid = (id) => {
   console.log(authHeader());
   return axios.get(`${ADMIN_URL}getproductsbyId?id=${id}`, {
+    headers: {
+      'Content-Type': 'application/json',    
+      'Access-Control-Allow-Origin': '*',
+      ...authHeader()
+    }
+  });
+};
+
+
+const getuserbyid = (id) => {
+  console.log(authHeader());
+  return axios.get(`${ADMIN_URL}getuserbyid?id=${id}`, {
     headers: {
       'Content-Type': 'application/json',    
       'Access-Control-Allow-Origin': '*',
@@ -134,6 +157,17 @@ const getfeaturebyproductid = (productId) => {
   });
 };
 
+
+const getfeaturebyproductidadmin = (productId) => {
+ 
+  return axios.get(`${ADMIN_URL}getfeaturesbyproductidadmin?productId=${productId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader()
+    }
+  });
+};
+
 const getfeaturebyid = (Id) => {
  
   return axios.get(`${MANAGER_URL}getfeaturebyid?id=${Id}`, {
@@ -143,6 +177,18 @@ const getfeaturebyid = (Id) => {
     }
   });
 };
+
+const getquotationbyid = (Id) => {
+ 
+  return axios.get(`${MANAGER_URL}getquotationbyid?id=${Id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeader()
+    }
+  });
+};
+
+
 
 
 
@@ -337,7 +383,11 @@ const UserService = {
   getfeaturebyproductid,
   getfeaturebyid,
   getallquotations,
-  delQuotation
+  delQuotation,
+  getuserbyid,
+  getfeaturebyproductidadmin,
+  getquotationbyid,
+  updatequotation
 
 
 };

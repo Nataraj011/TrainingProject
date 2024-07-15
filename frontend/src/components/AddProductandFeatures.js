@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import UserService from "../services/user.service";
 
+
 const AddProductAndFeatures = () => {
   // State for adding a product
   const [productName, setProductName] = useState('');
@@ -177,17 +178,7 @@ const AddProductAndFeatures = () => {
           <div className="card p-4">
             <h2 className="mt-4 text-center">Add Features</h2>
             <form onSubmit={handleFeatureSubmit}>
-              <div className="mb-3">
-                <label htmlFor="featureName" className="form-label">Feature Name:</label>
-                <input
-                  type="text"
-                  id="featureName"
-                  className="form-control"
-                  value={featureName}
-                  onChange={(e) => setFeatureName(e.target.value)}
-                  required
-                />
-              </div>
+              
               <div className="mb-3">
                 <label htmlFor="productDropdown" className="form-label">Select Product:</label>
                 <select
@@ -202,6 +193,17 @@ const AddProductAndFeatures = () => {
                     <option key={product.id} value={product.id.toString()}>{product.name}</option>
                   ))}
                 </select>
+              </div>
+              <div className="mb-3">
+                <label htmlFor="featureName" className="form-label">Feature Name:</label>
+                <input
+                  type="text"
+                  id="featureName"
+                  className="form-control"
+                  value={featureName}
+                  onChange={(e) => setFeatureName(e.target.value)}
+                  required
+                />
               </div>
               {/* Parameters for Features */}
               <div className="mb-3">
