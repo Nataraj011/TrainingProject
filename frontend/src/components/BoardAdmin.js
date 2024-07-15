@@ -1,97 +1,39 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./Allproducts.css"; // Ensure your CSS file with animations is correctly imported
+import "./BoardAdmin.css"; // Ensure your CSS file is correctly imported
 
 const BoardAdmin = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+  const navigateTo = (path) => {
+    window.location.href = path; // Use window.location.href to navigate to the specified path
   };
 
   return (
-    <div className="container-fluid fade-in"> {/* Apply fade-in animation */}
-      <div className="row justify-content-center mt-5">
-        <div className="col-md-6">
-          <header className="jumbotron slide-in"> {/* Apply slide-in animation */}
-            <h2 className="text-center mb-4">Admin Dashboard</h2>
-            <div className="form-group mt-3">
-              <label htmlFor="actions">Actions:</label>
-              <div className="dropdown">
-                <button
-                  className="btn btn-primary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  onClick={toggleDropdown}
-                >
-                  Select Action
-                </button>
-                <ul
-                  className={`dropdown-menu${dropdownOpen ? " show" : ""}`}
-                  aria-labelledby="dropdownMenuButton"
-                >
-                  <li>
-                    <Link to="/add-products" className="dropdown-item">
-                      Add Product and Features
-                    </Link>
-                  </li>
-                  {/* <li>
-                    <Link to="/add-features" className="dropdown-item">
-                      Add Features
-                    </Link>
-                  </li> */}
-                  <li>
-                    <Link to="/view-product" className="dropdown-item">
-                      View Products
-                    </Link>
-                  </li>
-                  {/* <li>
-                    <Link
-                      to="/view-productbyid-admin"
-                      className="dropdown-item"
-                    >
-                      View Products By ID
-                    </Link>
-                  </li> */}
-                  <li>
-                    <Link
-                      to="/view-productbyname-admin"
-                      className="dropdown-item"
-                    >
-                      View Products By Name
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/update-product" className="dropdown-item">
-                      Update Products
-                    </Link>
-                  </li>
-                  {/* <li>
-                    <Link to="/delete-param" className="dropdown-item">
-                      Delete Parameters
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/delete-feature" className="dropdown-item">
-                      Delete Features
-                    </Link>
-                  </li> */}
-                  <li>
-                    <Link to="/delete-product" className="dropdown-item">
-                      Delete Product
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/updaterole" className="dropdown-item">
-                      Update Role for User
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </header>
-        </div>
+    <div className="admin-container">
+      <div className="admin-sidebar">
+        <ul className="admin-nav">
+          <li className="admin-nav-item" onClick={() => navigateTo("/add-products")}>
+            Add Product and Features
+          </li>
+          <li className="admin-nav-item" onClick={() => navigateTo("/view-product")}>
+            View Products
+          </li>
+          <li className="admin-nav-item" onClick={() => navigateTo("/view-productbyname-admin")}>
+            View Products By Name
+          </li>
+          <li className="admin-nav-item" onClick={() => navigateTo("/update-product")}>
+            Update Products
+          </li>
+          <li className="admin-nav-item" onClick={() => navigateTo("/delete-product")}>
+            Delete Product
+          </li>
+          <li className="admin-nav-item" onClick={() => navigateTo("/updaterole")}>
+            Update Role for User
+          </li>
+        </ul>
       </div>
+      <header className="admin-header">
+        <h1 className="admin-heading">Admin Dashboard</h1>
+      </header>
     </div>
   );
 };

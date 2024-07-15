@@ -1,72 +1,33 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./Allproducts.css"; // Import your CSS file with animations
+import "./ManagerBoard.css"; // Import your CSS file with styles
 
 const ManagerBoard = () => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+  const navigateTo = (path) => {
+    window.location.href = path; // Navigate using window.location.href
   };
 
   return (
-    <div className="container-fluid fade-in"> {/* Apply fade-in animation */}
-      <div className="row justify-content-center mt-5">
-        <div className="col-md-6">
-          <header className="jumbotron slide-in"> {/* Apply slide-in animation */}
-            <h2 className="text-center mb-4">Manager Dashboard</h2>
-            <div className="form-group mt-3">
-              <label htmlFor="actions">Actions:</label>
-              <div className="dropdown">
-                <button
-                  className="btn btn-primary dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  onClick={toggleDropdown}
-                >
-                  Select Action
-                </button>
-                <ul
-                  className={`dropdown-menu${dropdownOpen ? " show" : ""}`}
-                  aria-labelledby="dropdownMenuButton"
-                >
-                  <li>
-                    <Link to="/create-quotation" className="dropdown-item">
-                      Create Quotation
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/get-quotation" className="dropdown-item">
-                      View Quotation
-                    </Link>
-                  </li>
-                  {/* <li>
-                    <Link
-                      to="/view-product-by-id-mgr"
-                      className="dropdown-item"
-                    >
-                      View Product by ID
-                    </Link>
-                  </li> */}
-                  <li>
-                    <Link
-                      to="/view-product-by-name-mgr"
-                      className="dropdown-item"
-                    >
-                      View Product by Name
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/view-all-products-mgr" className="dropdown-item">
-                      View All Products
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </header>
-        </div>
+    <div className="manager-container">
+      <div className="manager-sidebar">
+        <ul className="manager-nav">
+          <li className="manager-nav-item" onClick={() => navigateTo("/create-quotation")}>
+            Create Quotation
+          </li>
+          <li className="manager-nav-item" onClick={() => navigateTo("/get-quotation")}>
+            View Quotation
+          </li>
+          <li className="manager-nav-item" onClick={() => navigateTo("/view-product-by-name-mgr")}>
+            View Products By Name
+          </li>
+          <li className="manager-nav-item" onClick={() => navigateTo("/view-all-products-mgr")}>
+            View All Products
+          </li>
+        </ul>
       </div>
+      <header className="manager-header">
+        <h1 className="manager-heading">Manager Dashboard</h1>
+      </header>
     </div>
   );
 };
